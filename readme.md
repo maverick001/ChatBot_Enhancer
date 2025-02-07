@@ -1,6 +1,6 @@
 # Chatbot Enhancer
 
-This is a web application that allows you to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-R1-8B to summarize their common points into a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
+This is a web application that allows you to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-R1-8B to summarize their common points to a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
 
 
 
