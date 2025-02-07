@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot Enhancer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: #e6f3ff;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M 10 10 q 40 40 80 80" stroke="%23c6e3ff" stroke-width="2" fill="none"/></svg>');
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c5282;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-windows {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .chat-window {
+            flex: 1;
+            min-width: 300px;
+            max-width: calc(33% - 20px);
+            height: 500px;
+            border: 1px solid #90cdf4;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 1.2em;
+        }
+
+        .input-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #userInput {
+            width: 70%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #90cdf4;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2b6cb0;
+        }
+
+        .user-message {
+            color: #2c5282;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #ebf8ff;
+            border-radius: 8px;
+        }
+
+        .bot-message {
+            color: #2a4365;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #e6fffa;
+            border-radius: 8px;
+        }
+
+        .error-message {
+            margin: 10px 0;
+            padding: 8px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .sender-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #1a365d;
+        }
+
+        .message-content {
+            font-size: 0.95em;
+            margin-left: 5px;
+        }
+
+        .stats {
+            font-size: 0.8em;
+            color: #e53e3e !important;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .chat-window .stats {
+            color: #e53e3e;
+        }
+
+        .timestamp {
+            font-size: 0.64em;
+            color: #993366;
+            margin-bottom: 2px;
+            font-style: italic;
+        }
+
+        .user-message, .bot-message {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .model-selectors {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            width: 100%;
+            padding: 0;
+        }
+
+        .model-selector {
+            width: calc(33% - 20px);
+            text-align: center;
+        }
+
+        .model-selector-spacer {
+            width: calc(33% - 20px);
+        }
+
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #90cdf4;
+            border-radius: 8px;
+            background-color: white;
+            width: 100%;
+            max-width: 300px;
+            cursor: pointer;
+            appearance: auto;
+            -webkit-appearance: menulist;
+            -moz-appearance: menulist;
+            user-select: none;
+            transition: border-color 0.2s ease;
+        }
+
+        select:hover {
+            border-color: #4299e1;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2b6cb0;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        .select-instruction {
+            text-align: center;
+            color: #4a5568;
+            font-size: 1.1em;
+            font-weight: 900; 
+            /*font-style: bold;*/
+            width: calc(33% - 20px);
+        }
+
+        .instructions-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 0 0 20px 0;
+            position: relative;
+            top: 50px;
+        }
+
+        .instruction-spacer {
+            width: calc(33% - 20px);
+        }
+
+        .summary-window {
+            flex: 1;
+            min-width: 300px;
+            max-width: calc(33% - 20px);
+            height: 500px;
+            border: 2px solid #90cdf4;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-title {
+            text-align: center;
+            color: #4a5568;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .summary-header {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #90cdf4;
+            padding-bottom: 10px;
+        }
+
+        .summary-title {
+            font-weight: bold;
+            color: #2b6cb0;
+            margin: 5px 0;
+        }
+
+        .summary-content {
+            line-height: 1.6;
+            padding: 10px;
+            font-size: 1.1em;
+            color: #2d3748;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .error-message {
+            color: red;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #ffe6e6;
+            border: 1px solid #ff9999;
+            border-radius: 4px;
+        }
+        .model-selector {
+            margin: 10px 0;
+        }
+        select {
+            padding: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chatbot Enhancer</h1>
+    <div class="instructions-container">
+        <div class="instruction-spacer"></div>
+        <div class="select-instruction">Synthesized Answer</div>
+        <div class="instruction-spacer"></div>
+    </div>
+    
+    <div class="controls">
+        <div class="model-selectors">
+            <div class="model-selector">
+                <select id="model1" class="model-dropdown" onclick="this.focus()">
+                    <option value="">Select Model 1</option>
+                </select>
+            </div>
+            <div class="model-selector-spacer"></div>
+            <div class="model-selector">
+                <select id="model2" class="model-dropdown" onclick="this.focus()">
+                    <option value="">Select Model 2</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="chat-windows">
+            <div class="chat-window" id="window1"></div>
+            <div class="summary-window" id="summary-window">
+                <div class="summary-title">Common Ground Summary</div>
+                <div class="summary-content"></div>
+            </div>
+            <div class="chat-window" id="window2"></div>
+        </div>
+    </div>
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Enter your prompt">
+        <button onclick="sendPrompt()">Send</button>
+    </div>
+
+    <script>
+        let conversationHistory = {
+            messages: []
+        };
+
+        let availableModels = [];
+
+        function appendMessageStart(windowId, sender, className, messageId) {
+            const div = document.createElement('div');
+            div.className = className;
+            const timestamp = getFormattedDateTime();
+            div.innerHTML = `
+                <div class="timestamp">${timestamp}</div>
+                <span class="sender-name">${sender}:</span> 
+                <span class="message-content" id="${messageId}"></span>
+                <div class="stats" id="stats-${messageId}"></div>
+            `;
+            document.getElementById(windowId).appendChild(div);
+            return messageId;
+        }
+
+        function updateMessage(elementId, text) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = text;
+                const windowId = elementId.startsWith('response1') ? 'window1' : 'window2';
+                autoScroll(windowId);
+            }
+        }
+
+        function appendStats(elementId, tokens, time) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                const statsDiv = document.createElement('div');
+                statsDiv.className = 'stats';
+                const tokensPerSecond = (tokens / (time / 1000)).toFixed(1);
+                statsDiv.textContent = `Generated ${tokens} tokens in ${(time/1000).toFixed(1)}s (${tokensPerSecond} tokens/sec)`;
+                element.parentElement.appendChild(statsDiv);
+            }
+        }
+
+        function getFormattedDateTime() {
+            const now = new Date();
+            return now.toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function clearChatWindows() {
+            document.getElementById("window1").innerHTML = '';
+            document.getElementById("window2").innerHTML = '';
+        }
+
+        function displayEntireConversation() {
+            // Clear both windows first
+            clearChatWindows();
+            
+            // Display all messages in chronological order
+            conversationHistory.messages.forEach((msg, index) => {
+                if (msg.role === 'user') {
+                    appendUserMessage("window1", msg.content, msg.timestamp);
+                    appendUserMessage("window2", msg.content, msg.timestamp);
+                } else if (msg.role === 'assistant1') {
+                    appendBotMessage("window1", msg.model, msg.content, msg.timestamp, msg.stats);
+                } else if (msg.role === 'assistant2') {
+                    appendBotMessage("window2", msg.model, msg.content, msg.timestamp, msg.stats);
+                }
+            });
+        }
+
+        function appendUserMessage(windowId, message, timestamp = getFormattedDateTime()) {
+            const div = document.createElement('div');
+            div.className = 'user-message';
+            div.innerHTML = `
+                <div class="timestamp">${timestamp}</div>
+                <span class="sender-name">You:</span> 
+                <span class="message-content">${message}</span>
+            `;
+            document.getElementById(windowId).appendChild(div);
+            autoScroll(windowId);
+        }
+
+        function appendBotMessage(windowId, sender, message, timestamp, stats = null) {
+            const div = document.createElement('div');
+            div.className = 'bot-message';
+            div.innerHTML = `
+                <div class="timestamp">${timestamp}</div>
+                <span class="sender-name">${sender}:</span> 
+                <span class="message-content">${message}</span>
+                ${stats ? `<div class="stats">${stats}</div>` : ''}
+            `;
+            document.getElementById(windowId).appendChild(div);
+            autoScroll(windowId);
+        }
+
+        function buildFullPrompt(newInput) {
+            let fullPrompt = '';
+            
+            // Add previous conversations as context
+            conversationHistory.messages.forEach(msg => {
+                if (msg.role === 'user') {
+                    fullPrompt += `User: ${msg.content}\n`;
+                } else if (msg.role === 'assistant1') {
+                    fullPrompt += `${msg.model}: ${msg.content}\n`;
+                } else if (msg.role === 'assistant2') {
+                    fullPrompt += `${msg.model}: ${msg.content}\n`;
+                }
+            });
+
+            // Add new input
+            fullPrompt += `User: ${newInput}`;
+            return fullPrompt;
+        }
+
+        async function fetchAvailableModels() {
+            try {
+                const response = await fetch("/get_models");
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const models = await response.json();
+                populateModelSelectors(models);
+            } catch (error) {
+                console.error("Error fetching models:", error);
+            }
+        }
+
+        function populateModelSelectors(models) {
+            const selector1 = document.getElementById('model1');
+            const selector2 = document.getElementById('model2');
+            
+            // Clear existing options
+            selector1.innerHTML = '';
+            selector2.innerHTML = '';
+            
+            // Add empty first option
+            selector1.add(new Option('', ''));
+            selector2.add(new Option('', ''));
+            
+            // Add model options
+            models.forEach(model => {
+                selector1.add(new Option(model, model));
+                selector2.add(new Option(model, model));
+            });
+        }
+
+        async function sendPrompt() {
+            const userInput = document.getElementById("userInput").value;
+            if (!userInput.trim()) return;
+
+            const model1 = document.getElementById("model1").value;
+            const model2 = document.getElementById("model2").value;
+
+            if (!model1 || !model2) {
+                alert("Please select both models first!");
+                return;
+            }
+
+            // Generate unique IDs for this conversation
+            const response1Id = `response1-${Date.now()}`;
+            const response2Id = `response2-${Date.now()}`;
+
+            // Add user messages to both windows
+            appendUserMessage("window1", userInput);
+            appendUserMessage("window2", userInput);
+
+            // Add empty bot messages that will be updated
+            appendMessageStart("window1", model1, "bot-message", response1Id);
+            appendMessageStart("window2", model2, "bot-message", response2Id);
+
+            let response1Text = '';
+            let response2Text = '';
+            let response1Complete = false;
+            let response2Complete = false;
+
+            let startTime1 = Date.now();
+            let startTime2 = Date.now();
+            let tokens1 = 0;
+            let tokens2 = 0;
+
+            try {
+                const response = await fetch("/get_response", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        prompt: userInput,
+                        model1: model1,
+                        model2: model2
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+
+                while (true) {
+                    const {value, done} = await reader.read();
+                    if (done) break;
+                    
+                    const text = new TextDecoder().decode(value);
+                    const lines = text.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                
+                                if (data.error) {
+                                    console.error('Error:', data.error);
+                                    continue;
+                                }
+
+                                if (data.response1) {
+                                    response1Text += data.response1;
+                                    tokens1++;
+                                    updateMessage(response1Id, response1Text);
+                                    updateStats('stats-' + response1Id, tokens1, Date.now() - startTime1);
+                                }
+                                if (data.response2) {
+                                    response2Text += data.response2;
+                                    tokens2++;
+                                    updateMessage(response2Id, response2Text);
+                                    updateStats('stats-' + response2Id, tokens2, Date.now() - startTime2);
+                                }
+                                
+                                if (data.done) {
+                                    response1Complete = true;
+                                    response2Complete = true;
+                                    if (response1Complete && response2Complete) {
+                                        getSummary(userInput, response1Text, response2Text);
+                                    }
+                                }
+                            } catch (e) {
+                                console.error("Error parsing SSE data:", e);
+                            }
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error in sendPrompt:", error);
+                updateMessage(response1Id, "Error: " + error.message);
+                updateMessage(response2Id, "Error: " + error.message);
+            }
+
+            // Clear input after sending
+            document.getElementById("userInput").value = "";
+        }
+
+        // Updated getSummary function
+        async function getSummary(question, response1, response2) {
+            try {
+                const summaryWindow = document.getElementById('summary-window');
+                summaryWindow.innerHTML = '<div class="summary-content">Generating summary...</div>';
+                
+                const response = await fetch("/get_summary", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        question: question,
+                        response1: response1,
+                        response2: response2
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                let summaryText = '';
+                let finalOutputReceived = false;
+
+                while (true) {
+                    const {value, done} = await reader.read();
+                    if (done) break;
+                    
+                    const text = new TextDecoder().decode(value);
+                    const lines = text.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                
+                                if (data.error) {
+                                    console.error("Error in data:", data.error);
+                                    summaryWindow.innerHTML = `
+                                        <div class="error-message">
+                                            Error generating summary: ${data.error}
+                                        </div>`;
+                                    return; // Exit if there's an error
+                                }
+
+                                if (data.token && !finalOutputReceived) {
+                                    summaryText += data.token;
+                                    summaryWindow.innerHTML = `
+                                        <div class="summary-content">
+                                            <div class="streaming-content">${summaryText}</div>
+                                        </div>`;
+                                }
+
+                                if (data.final_output && !finalOutputReceived) {
+                                    finalOutputReceived = true;
+                                    const finalOutput = data.final_output;
+                                    
+                                    if (finalOutput.common_points && finalOutput.common_points.length > 0 && 
+                                        finalOutput.synthesized_summary) {
+                                        // Find the index where "Summary:" starts
+                                        const summaryStart = finalOutput.synthesized_summary.indexOf('Summary:');
+                                        if (summaryStart !== -1) {
+                                            // Only use the content starting from "Summary:"
+                                            const cleanedSummary = finalOutput.synthesized_summary.substring(summaryStart);
+                                            
+                                            summaryWindow.innerHTML = `
+                                                <div class="summary-content">
+                                                    ${cleanedSummary}
+                                                </div>`;
+                                        } else {
+                                            // Fallback if "Summary:" is not found
+                                            summaryWindow.innerHTML = `
+                                                <div class="summary-content">
+                                                    ${finalOutput.synthesized_summary}
+                                                </div>`;
+                                        }
+                                    }
+                                }
+                            } catch (e) {
+                                console.error("Error parsing JSON:", e, "Raw line:", line);
+                                if (!finalOutputReceived) {
+                                    summaryWindow.innerHTML = `
+                                        <div class="error-message">
+                                            Error parsing summary data. Please try again.
+                                        </div>`;
+                                }
+                            }
+                        }
+                    }
+                    // Break the while loop if final output has been received
+                    if (finalOutputReceived) break;
+                }
+            } catch (error) {
+                console.error("Error in getSummary:", error);
+                document.getElementById('summary-window').innerHTML = `
+                    <div class="error-message">
+                        Error generating summary: ${error.message}
+                    </div>`;
+            }
+        }
+
+        // Add this new function for error messages
+        function appendErrorMessage(windowId, message) {
+            const div = document.createElement('div');
+            div.className = 'error-message';
+            div.innerHTML = `
+                <div class="timestamp">${getFormattedDateTime()}</div>
+                <span class="message-content" style="color: #ff0000;">${message}</span>
+            `;
+            document.getElementById(windowId).appendChild(div);
+        }
+
+        document.getElementById("userInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendPrompt();
+            }
+        });
+
+        window.onload = function() {
+            fetchAvailableModels();
+            
+            ['window1', 'window2'].forEach(windowId => {
+                const chatWindow = document.getElementById(windowId);
+                chatWindow.addEventListener('scroll', function() {
+                    // User has manually scrolled
+                    this.dataset.userScrolled = true;
+                    
+                    // Reset if scrolled to bottom
+                    if (this.scrollHeight - this.scrollTop === this.clientHeight) {
+                        this.dataset.userScrolled = false;
+                    }
+                });
+            });
+        };
+
+        // Add auto-scroll function
+        function autoScroll(windowId) {
+            const chatWindow = document.getElementById(windowId);
+            if (chatWindow.scrollHeight - chatWindow.scrollTop === chatWindow.clientHeight) {
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+        }
+
+        // Updated function to fetch and populate models
+        async function loadAvailableModels() {
+            try {
+                console.log('Fetching models...');
+                const response = await fetch('/get_models');
+                const data = await response.json();
+                console.log('Received data:', data);
+
+                if (!data.models) {
+                    throw new Error('No models data received');
+                }
+
+                availableModels = data.models;
+                populateModelSelectors();
+            } catch (error) {
+                console.error('Error loading models:', error);
+                // Show error on page
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = `Failed to load models: ${error.message}`;
+                document.body.insertBefore(errorDiv, document.body.firstChild);
+            }
+        }
+
+        function populateModelSelectors() {
+            const selectors = ['model1', 'model2'];
+            
+            selectors.forEach(selectorId => {
+                const select = document.getElementById(selectorId);
+                if (!select) {
+                    console.error(`Select element ${selectorId} not found`);
+                    return;
+                }
+                
+                // Clear existing options
+                select.innerHTML = '';
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select Model';
+                select.appendChild(defaultOption);
+                
+                // Add model options
+                availableModels.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            loadAvailableModels();
+        });
+
+        // Add this new function to update stats
+        function updateStats(statsId, tokens, elapsedTime) {
+            const statsElement = document.getElementById(statsId);
+            if (!statsElement) {
+                const messageElement = document.getElementById(statsId.replace('stats-', ''));
+                if (messageElement) {
+                    const statsDiv = document.createElement('div');
+                    statsDiv.id = statsId;
+                    statsDiv.className = 'stats';
+                    messageElement.parentElement.appendChild(statsDiv);
+                }
+            }
+            
+            if (document.getElementById(statsId)) {
+                const tokensPerSecond = (tokens / (elapsedTime / 1000)).toFixed(1);
+                document.getElementById(statsId).textContent = 
+                    `Generated ${tokens} tokens in ${(elapsedTime/1000).toFixed(1)}s (${tokensPerSecond} tokens/sec)`;
+            }
+        }
+    </script>
+</body>
+</html>
