@@ -27,7 +27,10 @@ OLLAMA_GPU_CONFIG = {
         "batch": 1,  # Start with batch size 1
         "threads": 4,  # Number of CPU threads as fallback
         "context_size": 4096,  # Context window size
-        "seed": 42  # For reproducibility.
+        "seed": 42,  # For reproducibility
+        "temperature": 0.7,  # Added temperature parameter
+        "top_k": 5,     # Added top-k parameter
+        "top_p": 0.9    # Added top-p parameter
     }
 }
 
