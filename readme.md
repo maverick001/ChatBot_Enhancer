@@ -8,7 +8,7 @@ This is a web application that allows you to compare responses from 2 different 
 
 ## Features
 
-- **Model Selection**: Choose from available Ollama models via dropdown menus.
+- **Model Selection**: Choose from available Ollama models from dropdown menus.
 - **Dual Model Comparison**: Compare the output of two different LLM models for same prompt side by side.
 - **DeepSeek-r1 for summary**: Use local Deepseek-R1-8B model to summarize the 2 repsonses and synthesize common ground.
 - **Automatic Synthesis**: Automatically identifies and summarizes common points between 2 responses with a third LLM that is specialized in text analysis and summarization. 
