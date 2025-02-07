@@ -1,6 +1,6 @@
 # Chatbot Enhancer
 
-This is a web application that allows you to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-r1-8B to summarize their common points into a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
+This is a web application that allows you to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-R1-8B to summarize their common points into a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
 
 
 
@@ -10,7 +10,7 @@ This is a web application that allows you to compare responses from 2 different 
 
 - **Model Selection**: Choose from available Ollama models via dropdown menus.
 - **Dual Model Comparison**: Compare the output of two different LLM models for same prompt side by side.
-- **DeepSeek-r1 for summary**: Use local Deepseek-r-8B model to summarize the 2 repsonses and synthesize common ground.
+- **DeepSeek-r1 for summary**: Use local Deepseek-R1-8B model to summarize the 2 repsonses and synthesize common ground.
 - **Automatic Synthesis**: Automatically identifies and summarizes common points between 2 responses with a third LLM that is specialized in text analysis and summarization. 
 - **Output Management**: Use a system prompt to enforce a 300-token limit for consistent, concise responses.
 - **Token Generation Speed**: Show token generation rate of each response is calculated and displayed to compare LLM performance.
