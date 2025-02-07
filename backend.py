@@ -20,19 +20,19 @@ app = Flask(__name__, static_folder='.')
 app.logger.setLevel(logging.DEBUG)
 
 OLLAMA_API_BASE = "http://localhost:11434/api/generate"
-OLLAMA_GPU_CONFIG = {
-    "options": {
-        "gpu": True,  # Enable GPU
-        "numa": False,  # Disable NUMA for Windows
-        "batch": 1,  # Start with batch size 1
-        "threads": 4,  # Number of CPU threads as fallback
-        "context_size": 4096,  # Context window size
-        "seed": 42,  # For reproducibility
-        "temperature": 0.7,  # Added temperature parameter
-        "top_k": 5,     # Added top-k parameter
-        "top_p": 0.9    # Added top-p parameter
-    }
-}
+# OLLAMA_GPU_CONFIG = {
+#     "options": {
+#         "gpu": True,  # Enable GPU
+#         "numa": False,  # Disable NUMA for Windows
+#         "batch": 1,  # Start with batch size 1
+#         "threads": 4,  # Number of CPU threads as fallback
+#         "context_size": 4096,  # Context window size
+#         "seed": 42,  # For reproducibility
+#         "temperature": 0.7,  # Added temperature parameter
+#         "top_k": 5,     # Added top-k parameter
+#         "top_p": 0.9    # Added top-p parameter
+#     }
+# }
 
 # Serve index.html at root
 @app.route('/')
@@ -181,13 +181,28 @@ Begin analysis:"""
 
         def generate():
             try:
+                # Create default config for summary model
+                summary_config = {
+                    "options": {
+                        "gpu": True,
+                        "numa": False,
+                        "batch": 1,
+                        "threads": 4,
+                        "context_size": 4096,
+                        "seed": 42,
+                        "temperature": 0.7,
+                        "top_k": 5,
+                        "top_p": 0.9
+                    }
+                }
+
                 response = requests.post(
                     OLLAMA_API_BASE,
                     json={
                         "model": "deepseek-r1:8b",
                         "prompt": prompt,
                         "stream": True,
-                        **OLLAMA_GPU_CONFIG
+                        **summary_config
                     },
                     stream=True
                 )
@@ -241,8 +256,7 @@ Create a brief summary that synthesizes these points. Start directly with the Ke
                         json={
                             "model": "deepseek-r1:8b",
                             "prompt": summary_prompt,
-                            **OLLAMA_GPU_CONFIG
-
+                            **summary_config
                         }
                     ).json()
                     
@@ -325,6 +339,26 @@ def get_response():
         data = request.json
         TOKEN_LIMIT = 300
 
+        # Get model-specific parameters
+        params1 = data.get('params1', {})
+        params2 = data.get('params2', {})
+
+        # Create configs for each model
+        def create_model_config(params):
+            return {
+                "options": {
+                    "gpu": True,  # Enable GPU
+                    "numa": False,  # Disable NUMA for Windows
+                    "batch": 1,  # Start with batch size 1
+                    "threads": 4,  # Number of CPU threads as fallback
+                    "context_size": 4096,  # Context window size
+                    "seed": 42,  # For reproducibility
+                    "temperature": params.get('temperature', 0.7),
+                    "top_k": params.get('top_k', 5),
+                    "top_p": params.get('top_p', 0.9)
+                }
+            }
+
         # Updated system prompt with new token limit
         SYSTEM_PROMPT = """Please provide clear and concise responses around 250-300 tokens. 
         Focus on the most important information and be direct in your answers. 
@@ -339,7 +373,7 @@ def get_response():
                 responses = {"response1": "", "response2": ""}
                 tokens = {"response1": 0, "response2": 0}
 
-                # Model 1 response with GPU config
+                # Model 1 response with custom config
                 response1 = requests.post(
                     OLLAMA_API_BASE,
                     json={
@@ -347,7 +381,7 @@ def get_response():
                         "prompt": combined_prompt,
                         "system": SYSTEM_PROMPT,
                         "stream": True,
-                        **OLLAMA_GPU_CONFIG
+                        **create_model_config(params1)
                     },
                     stream=True
                 )
@@ -369,7 +403,7 @@ def get_response():
                         except json.JSONDecodeError:
                             continue
 
-                # Model 2 response with GPU config
+                # Model 2 response with custom config
                 response2 = requests.post(
                     OLLAMA_API_BASE,
                     json={
@@ -377,7 +411,7 @@ def get_response():
                         "prompt": combined_prompt,
                         "system": SYSTEM_PROMPT,
                         "stream": True,
-                        **OLLAMA_GPU_CONFIG
+                        **create_model_config(params2)
                     },
                     stream=True
                 )
