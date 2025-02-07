@@ -1,0 +1,7 @@
+flask
+langchain
+threading
+logging
+requests
+queue
+json
