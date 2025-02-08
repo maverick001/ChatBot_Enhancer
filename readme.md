@@ -2,6 +2,9 @@
 
 This is a web application that allows you to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-R1-8B to summarize their common points to a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
 
+Token per second (TPS) rate is also displayed after each output answer for each chat model.
+
+Configurable hyperparameters in the front window, which can be leveraged to control the creativeness of output answers.  
 
 
 ![Chatbot Enhancer Interface](screenshots/interface.png)
@@ -74,7 +77,7 @@ http://localhost:5000
 - Frontend: HTML, CSS, JavaScript
 - LLM Integration: Ollama API, LangChain
 - Streaming Support: Server-Sent Events (SSE)
-- GPU Acceleration: Inference acceleration enabled with CUDA v12.
+- GPU Acceleration: Inference acceleration enabled with CUDA v12 （verified with RTX 4060）.
 
 ## License
 
