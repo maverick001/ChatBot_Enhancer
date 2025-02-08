@@ -9,6 +9,9 @@ This is a web application that allows you to compare responses from 2 different 
 
 ![Chatbot Enhancer Interface](screenshots/interface.png)
 
+
+![Chatbot Enhancer Interface](screenshots/interface2.png)
+
 ## Features
 
 - **Model Selection**: Choose from available Ollama models from dropdown menus.
