@@ -2,7 +2,7 @@
 
 This is a web application that allows you to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-R1-8B to summarize their common points to a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
 
-- Token per second (TPS) rate is also displayed after each output answer for each chat model.
+- Token per second (TPS) rate and token count are displayed after each output for both models to show model performance.
 
 - Configurable hyperparameters in the front window, which can be leveraged to control the creativeness of output answers.  
 
