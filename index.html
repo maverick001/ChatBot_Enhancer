@@ -292,7 +292,7 @@
 
         .param-label {
             font-size: 15.2px;
-            color: #4a5568;
+            color: #800020;  /* Burgundy color */
             margin-right: 2px;
             font-weight: bold;
         }
@@ -318,6 +318,16 @@
             font-weight: bold;
             color: #4a5568;
         }
+
+        /* Add new style for hyperparameter header label */
+        .hyperparam-label {
+            font-size: 20.5px;  /* Same as model-label */
+            color: #4a5568;     /* Same as model-label */
+            font-weight: bold;
+            position: absolute;
+            left: 210px;        /* Moved 2 more pixels to the right (208px + 2px) */
+            top: 0;             /* Align vertically with Model Selection */
+        }
     </style>
 </head>
 <body>
@@ -332,6 +342,7 @@
         <div class="model-selectors">
             <div class="model-selector">
                 <span class="model-label">Model Selection</span>
+                <span class="hyperparam-label">Hyperparameter:</span>
                 <div class="model-select-container">
                     <select id="model1" class="model-dropdown">
                         <option value="">Select Model 1</option>
@@ -349,6 +360,7 @@
             <div class="model-selector-spacer"></div>
             <div class="model-selector">
                 <span class="model-label">Model Selection</span>
+                <span class="hyperparam-label">Hyperparameter:</span>
                 <div class="model-select-container">
                     <select id="model2" class="model-dropdown">
                         <option value="">Select Model 2</option>
