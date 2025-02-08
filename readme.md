@@ -1,6 +1,6 @@
 # Chatbot Enhancer
 
-Today, LLMs deployed on the Cloud have guardrails provided by CSP to prevent model hullucination, but open-source SLMs deployed on edge devices don't have same level of protection to handle the hullunication.  
+Today, LLMs deployed on the Cloud have guardrails provided by CSP to prevent model hullucination, but open-source SLMs deployed on edge devices don't have same level of protection to handle the hullunication. <br> 
 
 This project is a web application that allows users to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-R1-8B to summarize their common points to a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
 
@@ -26,9 +26,9 @@ This project is a web application that allows users to compare responses from 2 
 ## Prerequisites
 
 - Python 3.10
+- Ollama 0.5.2
 - LangChain 0.3.11
 - Flask 3.1.0
-- Ollama 0.5.2
 - Required Python packages (requirements.txt)
 
 
