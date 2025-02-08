@@ -154,9 +154,17 @@
             width: calc(33% - 20px);
             text-align: center;
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 10px;
             position: relative;
+        }
+
+        .model-select-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
         }
 
         .model-selector-spacer {
@@ -295,6 +303,21 @@
             gap: 4px;
             height: 100%;
         }
+
+        /* Add new styles for the model selection label container */
+        .model-label-container {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        /* Add new style for model selection label specifically */
+        .model-label {
+            font-size: 22.8px;  /* 15.2px * 1.5 = 22.8px (50% increase) */
+            align-self: flex-start;  /* Align to the left */
+            margin-left: 0;  /* Ensure no left margin */
+            font-weight: bold;
+            color: #4a5568;
+        }
     </style>
 </head>
 <body>
@@ -308,30 +331,36 @@
     <div class="controls">
         <div class="model-selectors">
             <div class="model-selector">
-                <select id="model1" class="model-dropdown">
-                    <option value="">Select Model 1</option>
-                </select>
-                <div class="param-container">
-                    <span class="param-label">Temperature</span>
-                    <input type="number" id="temp1" class="param-input" value="0.7" min="0" max="1" step="0.1">
-                    <span class="param-label">Top-K</span>
-                    <input type="number" id="topk1" class="param-input" value="5" min="1" step="1">
-                    <span class="param-label">Top-P</span>
-                    <input type="number" id="topp1" class="param-input" value="0.9" min="0" max="1" step="0.1">
+                <span class="model-label">Model Selection</span>
+                <div class="model-select-container">
+                    <select id="model1" class="model-dropdown">
+                        <option value="">Select Model 1</option>
+                    </select>
+                    <div class="param-container">
+                        <span class="param-label">Temperature</span>
+                        <input type="number" id="temp1" class="param-input" value="0.7" min="0" max="1" step="0.1">
+                        <span class="param-label">Top-K</span>
+                        <input type="number" id="topk1" class="param-input" value="5" min="1" step="1">
+                        <span class="param-label">Top-P</span>
+                        <input type="number" id="topp1" class="param-input" value="0.9" min="0" max="1" step="0.1">
+                    </div>
                 </div>
             </div>
             <div class="model-selector-spacer"></div>
             <div class="model-selector">
-                <select id="model2" class="model-dropdown">
-                    <option value="">Select Model 2</option>
-                </select>
-                <div class="param-container">
-                    <span class="param-label">Temperature</span>
-                    <input type="number" id="temp2" class="param-input" value="0.7" min="0" max="1" step="0.1">
-                    <span class="param-label">Top-K</span>
-                    <input type="number" id="topk2" class="param-input" value="5" min="1" step="1">
-                    <span class="param-label">Top-P</span>
-                    <input type="number" id="topp2" class="param-input" value="0.9" min="0" max="1" step="0.1">
+                <span class="model-label">Model Selection</span>
+                <div class="model-select-container">
+                    <select id="model2" class="model-dropdown">
+                        <option value="">Select Model 2</option>
+                    </select>
+                    <div class="param-container">
+                        <span class="param-label">Temperature</span>
+                        <input type="number" id="temp2" class="param-input" value="0.7" min="0" max="1" step="0.1">
+                        <span class="param-label">Top-K</span>
+                        <input type="number" id="topk2" class="param-input" value="5" min="1" step="1">
+                        <span class="param-label">Top-P</span>
+                        <input type="number" id="topp2" class="param-input" value="0.9" min="0" max="1" step="0.1">
+                    </div>
                 </div>
             </div>
         </div>
