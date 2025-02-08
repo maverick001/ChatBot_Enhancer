@@ -45,9 +45,9 @@ This is a web application that allows you to compare responses from 2 different 
 
 3. Download your desired open-source models from Ollama:
 
-   Ollama pull Deepseek-r1:8B  &nbsp;&nbsp; <span style="color: lightblue;">(reasoning model for summarization task)</span>
+   Ollama pull Deepseek-r1:8b  &nbsp;&nbsp; <font color="blue">(reasoning model for summarization task)</font>
 
-   Ollama pull Qwen2.5:7B
+   Ollama pull Qwen2.5:7b
 
    Ollama pull llama3.1:8b-instruct-q6_K
 
