@@ -157,8 +157,8 @@ def get_summary():
         if not response1 or not response2:
             return jsonify({"error": "Missing responses"}), 400
 
-        # Create the prompt
-        prompt = f"""Analyze these two AI responses and find their common points:
+        # Update the initial analysis prompt
+        prompt = f"""Analyze these two AI responses and synthesize their shared content:
 
 QUESTION: {question}
 
@@ -168,16 +168,19 @@ FIRST RESPONSE:
 SECOND RESPONSE:
 {response2}
 
-Provide your analysis in this format:
-Key Common Points:
-- [Point 1]
-- [Point 2]
-- [Point 3]
+Extract the common ideas and information shared between both responses, then synthesize them into a comprehensive summary.
+Focus on the actual content and insights rather than just listing similarities.
+Your response should be between 150-250 tokens and written in natural language.
 
-Summary:
-[Write a brief summary paragraph]
+Format your response as:
 
-Begin analysis:"""
+**Key Common Points:**
+- **[Topic/Theme]:** [Detailed explanation of the shared content]
+- **[Topic/Theme]:** [Detailed explanation of the shared content]
+- **[Topic/Theme]:** [Detailed explanation of the shared content]
+
+**Synthesized Summary:**
+[Write a flowing, natural language summary that weaves together the common content from both responses. Focus on explaining the actual information and insights shared between them, not just their similarities.]"""
 
         def generate():
             try:
@@ -236,19 +239,27 @@ Begin analysis:"""
                     # Filter valid points
                     valid_points = [p for p in points if len(p) > 10][:5]
                     
-                    # Generate a natural language summary from the points
+                    # Update the summary prompt template
                     summary_prompt = f"""Based on these key points:
 {chr(10).join('- ' + point for point in valid_points)}
 
-Create a brief summary that synthesizes these points. Start directly with the Key Common Points section, with NO titles, headers, or introductions:
+Create a comprehensive summary that explains the shared content and insights from both responses.
+Your summary MUST:
+- Be between 150-250 tokens long
+- Focus on the actual information and knowledge shared between the responses
+- Explain the concepts and ideas in natural language
+- Connect related points to form a coherent narrative
+- Provide context and explanations where needed
+
+Format your response as:
 
 **Key Common Points:**
-- **[First Point Label]:** [First point details]
-- **[Second Point Label]:** [Second point details]
-- **[Third Point Label]:** [Third point details]
+- **[Topic/Theme]:** [Detailed explanation of shared content]
+- **[Topic/Theme]:** [Detailed explanation of shared content]
+- **[Topic/Theme]:** [Detailed explanation of shared content]
 
-**Summary:**
-[A flowing paragraph that synthesizes the points]"""
+**Synthesized Summary:**
+[Write a flowing, natural language summary that explains the actual content shared between the responses. Focus on the information and insights, not just the fact that they share similarities.]"""
 
                     # Get the summary from the model
                     summary_response = requests.post(
@@ -360,10 +371,10 @@ def get_response():
             }
 
         # Updated system prompt with new token limit
-        SYSTEM_PROMPT = """Please provide clear and concise responses around 250-300 tokens. 
-        Focus on the most important information and be direct in your answers. 
-        If a longer response is needed, prioritize the most crucial points first.
-        In no chance shall an answer be longer than 300 tokens."""
+        SYSTEM_PROMPT = """Please provide a detailed response between 150-300 tokens.
+Your response MUST be at least 150 tokens long and MUST NOT exceed 300 tokens.
+Focus on providing comprehensive information while staying within these limits.
+If you reach 300 tokens, conclude your response naturally at the nearest sentence end."""
 
         # Combine system prompt with user prompt
         combined_prompt = f"System: {SYSTEM_PROMPT}\n\nUser: {data['prompt']}"
@@ -387,18 +398,26 @@ def get_response():
                 )
 
                 for line in response1.iter_lines():
-                    if line and tokens["response1"] < TOKEN_LIMIT:
+                    if line:
                         try:
                             json_response = json.loads(line)
                             response_text = json_response.get('response', '')
                             if response_text:
-                                responses["response1"] += response_text
-                                tokens["response1"] += 1
-                                yield f"data: {json.dumps({'response1': response_text, 'tokens1': tokens['response1']})}\n\n"
+                                # Only add text if we haven't hit minimum tokens or are mid-sentence
+                                if tokens["response1"] < 150 or not response_text.rstrip().endswith(('.', '!', '?')):
+                                    responses["response1"] += response_text
+                                    tokens["response1"] += 1
+                                    yield f"data: {json.dumps({'response1': response_text, 'tokens1': tokens['response1']})}\n\n"
                                 
-                                if tokens["response1"] >= TOKEN_LIMIT:
-                                    message = json.dumps({'response1': '\n[Token limit reached: 300]', 'tokens1': tokens['response1']})
-                                    yield f"data: {message}\n\n"
+                                # Stop at 300 tokens or at the next sentence end after 150 tokens
+                                if tokens["response1"] >= 300 or (tokens["response1"] >= 150 and response_text.rstrip().endswith(('.', '!', '?'))):
+                                    if tokens["response1"] < 150:
+                                        message = json.dumps({'response1': '\n[Response too short, regenerating...]', 'tokens1': tokens['response1']})
+                                        yield f"data: {message}\n\n"
+                                        # Could add regeneration logic here
+                                    else:
+                                        message = json.dumps({'response1': '\n[Response complete]', 'tokens1': tokens['response1']})
+                                        yield f"data: {message}\n\n"
                                     break
                         except json.JSONDecodeError:
                             continue
