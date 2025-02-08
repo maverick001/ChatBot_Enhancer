@@ -1,6 +1,6 @@
 # Chatbot Enhancer
 
-Today, LLMs deployed on the Cloud have guardrails provided by CSP to prevent model hullucination, but open-source SLMs deployed on edge devices usually don't have same level of protection to handle the hullunication. 
+Today, LLMs deployed on the Cloud have guardrails provided by CSP to prevent model hullucination, but open-source SLMs deployed on the edge devices usually don't have the same level of protection to handle the hullunication. 
 
 
 This project is a web application that allows users to compare responses from 2 different local LLMs side by side, and then use reasoning model Deepseek-R1-8B to summarize their common points to a synthesized answer. With this method, it can allelivate the effect of signle model's hullicinaiton and give you a more accurate answer to your prompt.
