@@ -24,8 +24,9 @@ This is a web application that allows you to compare responses from 2 different 
 ## Prerequisites
 
 - Python 3.10
-- Flask
-- Ollama 0.5.0 or above
+- LangChain 0.3.11
+- Flask 3.1.0
+- Ollama 0.5.2
 - Required Python packages (requirements.txt)
 
 
@@ -44,7 +45,7 @@ This is a web application that allows you to compare responses from 2 different 
 
 3. Download your desired open-source models from Ollama:
 
-   Ollama pull Deepseek-r1:8B  &nbsp;&nbsp; (reasoning model for summarization task)
+   Ollama pull Deepseek-r1:8B  &nbsp;&nbsp; <span style="color: blue;">(reasoning model for summarization task)</span>
 
    Ollama pull Qwen2.5:7B
 
@@ -84,7 +85,7 @@ http://localhost:5000
 - Frontend: HTML, CSS, JavaScript
 - LLM Integration: Ollama API, LangChain
 - Streaming Support: Server-Sent Events (SSE)
-- GPU Acceleration: Inference acceleration enabled with CUDA v12 （verified with RTX 4060）.
+- GPU Acceleration: Inference acceleration enabled with <span style="color: blue;">CUDA v12 (verified with RTX 4060)</span>.
 
 ## License
 
