@@ -16,6 +16,7 @@
             text-align: center;
             color: #2c5282;
             margin-bottom: 30px;
+            font-size: 2.6em;
         }
 
         .container {
@@ -194,7 +195,7 @@
         .select-instruction {
             text-align: center;
             color: #4a5568;
-            font-size: 1.1em;
+            font-size: 1.65em;
             font-weight: 900; 
             /*font-style: bold;*/
             width: calc(33% - 20px);
@@ -272,9 +273,9 @@
 
         /* Add new styles for hyperparameter inputs */
         .param-input {
-            width: 50px;
+            width: 45px;
             padding: 5px;
-            font-size: 14px;
+            font-size: 16.1px;
             border: 1px solid #90cdf4;
             border-radius: 4px;
             text-align: center;
@@ -282,21 +283,22 @@
         }
 
         .param-label {
-            font-size: 12px;
+            font-size: 15.2px;
             color: #4a5568;
             margin-right: 2px;
+            font-weight: bold;
         }
 
         .param-container {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             height: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>Chatbot Enhancer</h1>
+    <h1>ChatBot Enhancer</h1>
     <div class="instructions-container">
         <div class="instruction-spacer"></div>
         <div class="select-instruction">Synthesized Answer</div>
@@ -310,11 +312,11 @@
                     <option value="">Select Model 1</option>
                 </select>
                 <div class="param-container">
-                    <span class="param-label">Temperature:</span>
+                    <span class="param-label">Temperature</span>
                     <input type="number" id="temp1" class="param-input" value="0.7" min="0" max="1" step="0.1">
-                    <span class="param-label">Top-k:</span>
+                    <span class="param-label">Top-K</span>
                     <input type="number" id="topk1" class="param-input" value="5" min="1" step="1">
-                    <span class="param-label">Top-p:</span>
+                    <span class="param-label">Top-P</span>
                     <input type="number" id="topp1" class="param-input" value="0.9" min="0" max="1" step="0.1">
                 </div>
             </div>
@@ -324,11 +326,11 @@
                     <option value="">Select Model 2</option>
                 </select>
                 <div class="param-container">
-                    <span class="param-label">Temperature:</span>
+                    <span class="param-label">Temperature</span>
                     <input type="number" id="temp2" class="param-input" value="0.7" min="0" max="1" step="0.1">
-                    <span class="param-label">Top-k:</span>
+                    <span class="param-label">Top-K</span>
                     <input type="number" id="topk2" class="param-input" value="5" min="1" step="1">
-                    <span class="param-label">Top-p:</span>
+                    <span class="param-label">Top-P</span>
                     <input type="number" id="topp2" class="param-input" value="0.9" min="0" max="1" step="0.1">
                 </div>
             </div>
