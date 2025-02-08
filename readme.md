@@ -45,7 +45,7 @@ This is a web application that allows you to compare responses from 2 different 
 
 3. Download your desired open-source models from Ollama:
 
-   Ollama pull Deepseek-r1:8b  &nbsp;&nbsp; <font color="lightblue">(reasoning model for summarization task)</font>
+   Ollama pull Deepseek-r1:8b  &nbsp;&nbsp; （reasoning model for summarization task）
 
    Ollama pull Qwen2.5:7b
 
@@ -85,7 +85,7 @@ http://localhost:5000
 - Frontend: HTML, CSS, JavaScript
 - LLM Integration: Ollama API, LangChain
 - Streaming Support: Server-Sent Events (SSE)
-- GPU Acceleration: Inference acceleration enabled with <span style="color: blue;">CUDA v12 (verified with RTX 4060)</span>.
+- GPU Acceleration: Inference acceleration enabled with CUDA v12 （verified with RTX 4060）.
 
 ## License
 
