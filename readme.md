@@ -44,9 +44,13 @@ This is a web application that allows you to compare responses from 2 different 
 
 3. Download your desired open-source models from Ollama:
 
-   Ollama pull Deepseek-r1:8B
-   Ollama pull Llama3.1:8B
+   Ollama pull Deepseek-r1:8B (reasoning model for summarization task)
+
    Ollama pull Qwen2.5:7B
+
+   Ollama pull llama3.1:8b-instruct-q6_K
+
+   Ollama pull Gemma2:9b-instruct-q6_K
 
 4. Make sure Ollama is running locally on port 11434
 
